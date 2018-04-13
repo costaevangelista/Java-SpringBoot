@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.costawebs.cursomc.domain.Categoria;
 import br.com.costawebs.cursomc.domain.Cidade;
+import br.com.costawebs.cursomc.domain.Cliente;
+import br.com.costawebs.cursomc.domain.Endereco;
 import br.com.costawebs.cursomc.domain.Estado;
 import br.com.costawebs.cursomc.domain.Produto;
+import br.com.costawebs.cursomc.domain.enums.TipoCliente;
 import br.com.costawebs.cursomc.repositories.CategoriaRepository;
 import br.com.costawebs.cursomc.repositories.CidadeRepository;
+import br.com.costawebs.cursomc.repositories.ClienteRepository;
+import br.com.costawebs.cursomc.repositories.EnderecoRepository;
 import br.com.costawebs.cursomc.repositories.EstadoRepository;
 import br.com.costawebs.cursomc.repositories.ProdutoRepository;
 
@@ -30,6 +35,12 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -67,6 +78,19 @@ public class CursomcApplication implements CommandLineRunner {
 		
 		estadoRepository.save(Arrays.asList(est1, est2));
 		cidadeRepository.save(Arrays.asList(c1, c2, c3));
+		
+		Cliente cli1 = new Cliente(null, "Maria da Silva", "maria@gmail.com", "362626262", TipoCliente.PESSOAFISICA);
+		
+		cli1.getTelefones().addAll(Arrays.asList("9536365263", "9589652632"));
+		
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli1, c1);
+		Endereco e2 = new Endereco(null, "Avenida Vida Matos", "300", "Apto 303", "Cnetro", "959595544", cli1, c2);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		
+		clienteRepository.save(Arrays.asList(cli1));
+		enderecoRepository.save(Arrays.asList(e1, e2));
+		
 		
 	}
 }
