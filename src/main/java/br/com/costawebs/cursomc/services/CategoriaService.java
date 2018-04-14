@@ -1,10 +1,12 @@
 package br.com.costawebs.cursomc.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.costawebs.cursomc.domain.Categoria;
 import br.com.costawebs.cursomc.repositories.CategoriaRepository;
+import br.com.costawebs.cursomc.services.exceptions.DataIntegrityException;
 import br.com.costawebs.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -30,5 +32,16 @@ public class CategoriaService {
 	public Categoria update(Categoria categoria) {
 		find(categoria.getId());
 		return repository.save(categoria);
+	}
+
+	public void delete(Long id) {
+		find(id);
+		try {
+			repository.delete(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos cadastrados");
+		}
+		
+		
 	}
 }
